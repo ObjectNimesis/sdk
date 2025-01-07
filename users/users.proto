@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package users;
+
+option go_package = "gitlab.com/ObjectNimesis/sdk/users;proto";
+
+
+message UserGender {
+  string gender = 1;
+  string visibility = 2;
+}
+
+message UserEmail {
+  enum EmailType {
+    primary = 0;
+    recovery = 1;
+    contact = 2;
+    alternative = 3;
+  }
+
+  string email = 2;
+  string visibility = 3;
+  bool verified = 4;
+}
+
+message User {
+  uint32 id = 1;
+  string password = 2;
+  string username = 3;
+  string display = 4;
+
+  optional string pronouns = 5;
+
+  string avatar = 7;
+
+  UserGender gender = 9;
+  repeated UserEmail emails = 11;
+}
+
+message CreateRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message CreateResponse {
+  User user = 1;
+}
+
+message GetByIdRequest {
+  uint32 userId = 1;
+}
+
+message GetByIdResponse {
+  User user = 1;
+}
+
+message GetByUsernameRequest {
+  string username = 1;
+}
+
+message GetByUsernameResponse {
+  User user = 1;
+}
+
+message DeleteByIdRequest {
+  uint32 userId = 1;
+}
+
+message DeleteByIdResponse {
+  bool success = 1;
+}
+
+message EditByIdRequest {
+  uint32 userId = 1;
+  User data = 2;
+}
+
+message EditByIdResponse {
+  bool success = 1;
+}
+
+message GetByEmailRequest {
+  string email = 1;
+}
+
+message GetByEmailResponse {
+  User user = 1;
+}
+
+
+service UsersService {
+  rpc create(CreateRequest) returns (CreateResponse);
+  rpc getById(GetByIdRequest) returns (GetByIdResponse);
+  rpc getByUsername(GetByUsernameRequest) returns (GetByUsernameResponse);
+  rpc getByEmail(GetByEmailRequest) returns (GetByEmailResponse);
+  rpc deleteById(DeleteByIdRequest) returns (DeleteByIdResponse);
+  rpc editById(EditByIdRequest) returns (EditByIdResponse);
+}
