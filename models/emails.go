@@ -23,7 +23,7 @@ var EmailTypes = struct {
 }
 
 type Email struct {
-	ID int `gorm:"primaryKey;auto_increment" json:"id"`
+	ID uint32 `gorm:"primaryKey;auto_increment" json:"id"`
 
 	Address  string           `gorm:"unique;not null" json:"address"`
 	Type     EmailAddressType `gorm:"type:varchar(255);not null" json:"type"`
