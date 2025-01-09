@@ -1,18 +1,26 @@
 syntax = "proto3";
-package auth;
 
+package auth;
 
 option go_package = "github.com/ObjectNimesis/sdk/auth;proto";
 
+// Request message for validating the access token
 message ValidateTokenRequest {
+  // The access token to be validated
   string accessToken = 1;
 }
 
+// Response message that indicates whether the token is valid
 message ValidateTokenResponse {
+  // True if the token is valid, false otherwise
   bool valid = 1;
+
+  // User ID associated with the valid token, if applicable
   uint32 userId = 2;
 }
 
+// AuthService defines the authentication service
 service AuthService {
-  rpc validateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+  // RPC to validate an access token
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
 }

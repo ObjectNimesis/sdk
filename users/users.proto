@@ -4,96 +4,104 @@ package users;
 
 option go_package = "gitlab.com/ObjectNimesis/sdk/users;proto";
 
-
-message UserGender {
-  string gender = 1;
-  string visibility = 2;
+// Enum to represent different types of email addresses.
+enum EmailAddressType {
+  primary = 0;
+  recovery = 1;
+  contact = 2;
+  alternative = 3;
 }
 
-message UserEmail {
-  enum EmailType {
-    primary = 0;
-    recovery = 1;
-    contact = 2;
-    alternative = 3;
-  }
-
-  string email = 2;
-  string visibility = 3;
-  bool verified = 4;
-}
-
+// Message to represent a user.
 message User {
   uint32 id = 1;
-  string password = 2;
-  string username = 3;
-  string display = 4;
-
-  optional string pronouns = 5;
-
+  string username = 2;
+  string display_name = 3;
+  string password = 4;
+  string gender = 5;
+  string pronouns = 6;
   string avatar = 7;
-
-  UserGender gender = 9;
-  repeated UserEmail emails = 11;
+  repeated Email emails = 8;
 }
 
-message CreateRequest {
+// Message to represent an email address associated with a user.
+message Email {
+  string address = 1;           // Renamed to "address" for clarity.
+  EmailAddressType type = 2;    // The type of the email.
+  bool verified = 3;            // Whether the email is verified or not.
+  uint32 user_id = 4;           // User ID associated with this email.
+  User user = 5;                // The User object itself (redundant with user_id).
+}
+
+// Request message for creating a user.
+message CreateUserRequest {
   string username = 1;
   string email = 2;
   string password = 3;
 }
 
-message CreateResponse {
+// Response message for creating a user.
+message CreateUserResponse {
   User user = 1;
 }
 
-message GetByIdRequest {
-  uint32 userId = 1;
+// Request message to get a user by ID.
+message GetUserByIdRequest {
+  uint32 user_id = 1;           // Renamed to "user_id" for consistency.
 }
 
-message GetByIdResponse {
+// Response message to return a user by ID.
+message GetUserByIdResponse {
   User user = 1;
 }
 
-message GetByUsernameRequest {
+// Request message to get a user by username.
+message GetUserByUsernameRequest {
   string username = 1;
 }
 
-message GetByUsernameResponse {
+// Response message to return a user by username.
+message GetUserByUsernameResponse {
   User user = 1;
 }
 
-message DeleteByIdRequest {
-  uint32 userId = 1;
-}
-
-message DeleteByIdResponse {
-  bool success = 1;
-}
-
-message EditByIdRequest {
-  uint32 userId = 1;
-  User data = 2;
-}
-
-message EditByIdResponse {
-  bool success = 1;
-}
-
-message GetByEmailRequest {
+// Request message to get a user by email.
+message GetUserByEmailRequest {
   string email = 1;
 }
 
-message GetByEmailResponse {
+// Response message to return a user by email.
+message GetUserByEmailResponse {
   User user = 1;
 }
 
+// Request message for deleting a user by ID.
+message DeleteUserByIdRequest {
+  uint32 user_id = 1;
+}
 
+// Response message for deleting a user.
+message DeleteUserByIdResponse {
+  bool success = 1;  // Indicates whether the deletion was successful.
+}
+
+// Request message for editing a user by ID.
+message EditUserByIdRequest {
+  uint32 user_id = 1;
+  User user_data = 2;  // The user data to be updated.
+}
+
+// Response message for editing a user.
+message EditUserByIdResponse {
+  bool success = 1;  // Indicates whether the update was successful.
+}
+
+// The Users service with various RPC methods for managing users.
 service UsersService {
-  rpc create(CreateRequest) returns (CreateResponse);
-  rpc getById(GetByIdRequest) returns (GetByIdResponse);
-  rpc getByUsername(GetByUsernameRequest) returns (GetByUsernameResponse);
-  rpc getByEmail(GetByEmailRequest) returns (GetByEmailResponse);
-  rpc deleteById(DeleteByIdRequest) returns (DeleteByIdResponse);
-  rpc editById(EditByIdRequest) returns (EditByIdResponse);
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUserById(GetUserByIdRequest) returns (GetUserByIdResponse);
+  rpc GetUserByUsername(GetUserByUsernameRequest) returns (GetUserByUsernameResponse);
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (GetUserByEmailResponse);
+  rpc DeleteUserById(DeleteUserByIdRequest) returns (DeleteUserByIdResponse);
+  rpc EditUserById(EditUserByIdRequest) returns (EditUserByIdResponse);
 }
