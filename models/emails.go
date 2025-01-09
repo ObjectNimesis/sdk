@@ -23,7 +23,9 @@ var EmailTypes = struct {
 }
 
 type Email struct {
-	Address  string           `gorm:"primaryKey;unique;not null" json:"address"`
+	ID int `gorm:"primaryKey;auto_increment" json:"id"`
+
+	Address  string           `gorm:"unique;not null" json:"address"`
 	Type     EmailAddressType `gorm:"type:varchar(255);not null" json:"type"`
 	Verified bool             `gorm:"default:false" json:"verified"`
 
